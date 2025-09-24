@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">foodmap</string>
+    <string name="app_name">Meu App</string>
+    <string name="titulo_login">Login</string>
+    <string name="hint_usuario">Usuário</string>
+    <string name="hint_senha">Senha</string>
+    <string name="btn_entrar">Entrar</string>
+    <string name="login_sucesso">Login realizado com sucesso!</string>
+    <string name="login_falha">Usuário ou senha inválidos.</string>
 </resources>

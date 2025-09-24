@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Foodmap" parent="Base.Theme.Foodmap" />
+    <style name="Theme.FoodMap" parent="Theme.Material3.DayNight.NoActionBar" />
 </resources>
