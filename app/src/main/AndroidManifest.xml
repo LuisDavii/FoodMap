@@ -13,15 +13,9 @@
         android:theme="@style/Theme.Foodmap">
         <activity
             android:name=".cadastro"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".login"
-            android:exported="false" />
-        <activity
-            android:name=".aaaaa"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
