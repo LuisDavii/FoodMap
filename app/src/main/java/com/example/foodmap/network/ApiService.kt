@@ -8,9 +8,33 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("api/usuarios/")
     fun cadastrarUsuario(@Body usuario: Usuario): Call<ApiResponse>
+
+    // ✅ Novo endpoint de login
+    @POST("api/login/")
+    fun loginUsuario(@Body loginRequest: LoginRequest): Call<LoginResponse>
 }
 
-// Classe para tratar a resposta da API
+// ✅ Request para login
+data class LoginRequest(
+    val userName: String,
+    val password: String
+)
+
+// ✅ Response para login
+data class LoginResponse(
+    val message: String,
+    val usuario: UsuarioResponse? = null
+)
+
+// ✅ Dados do usuário retornados no login
+data class UsuarioResponse(
+    val id: Int,
+    val userName: String,
+    val name: String,
+    val email: String
+)
+
+// ✅ Response para cadastro (já existente)
 data class ApiResponse(
     val message: String,
     val id: Int? = null,

@@ -1,6 +1,7 @@
 package com.example.foodmap
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -24,6 +25,8 @@ class Cadastro : AppCompatActivity() {
     private lateinit var editConfirmarSenha: EditText
     private lateinit var btnCriarConta: Button
 
+    private lateinit var btnJaPossuiConta: Button
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +49,7 @@ class Cadastro : AppCompatActivity() {
         editSenha = findViewById(R.id.editSenha)
         editConfirmarSenha = findViewById(R.id.editConfirmarSenha)
         btnCriarConta = findViewById(R.id.btnCriarConta)
+        btnJaPossuiConta = findViewById(R.id.btnJaPossuiConta)
     }
 
     private fun setupClickListeners() {
@@ -54,9 +58,9 @@ class Cadastro : AppCompatActivity() {
                 cadastrarUsuario()
             }
         }
-
-        findViewById<Button>(R.id.btnJaPossuiConta).setOnClickListener {
-            finish()
+        btnJaPossuiConta.setOnClickListener {
+            val intent = Intent(this, Login::class.java)
+            startActivity(intent)
         }
     }
 
@@ -108,6 +112,8 @@ class Cadastro : AppCompatActivity() {
         btnCriarConta.isEnabled = false
         btnCriarConta.text = "Cadastrando..."
 
+
+
         RetrofitClient.instance.cadastrarUsuario(usuario).enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 btnCriarConta.isEnabled = true
@@ -120,7 +126,6 @@ class Cadastro : AppCompatActivity() {
                         apiResponse?.message ?: "Usuário cadastrado com sucesso!",
                         Toast.LENGTH_SHORT
                     ).show()
-                    finish()
                 } else {
                     val errorMessage = when (response.code()) {
                         400 -> "Dados inválidos. Verifique as informações."
@@ -130,6 +135,8 @@ class Cadastro : AppCompatActivity() {
                     Toast.makeText(this@Cadastro, errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
+
+
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 btnCriarConta.isEnabled = true
@@ -142,5 +149,7 @@ class Cadastro : AppCompatActivity() {
                 ).show()
             }
         })
+
+
     }
 }
