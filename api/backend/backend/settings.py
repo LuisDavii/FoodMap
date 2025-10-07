@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': 'foodMap',
         'USER': 'postgres',
         'PASSWORD': '123123',
-        'HOST': 'localhost',   
+        'HOST': '26.3.73.152',   
         
     }
 }
