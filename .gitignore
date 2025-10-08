@@ -1,16 +1,24 @@
+# Python
+# =======================================================
+# Arquivos de bytecode (compilados)
+*.pyc
+__pycache__/
+
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# Arquivos de configurações locais
+.idea/
+.vscode/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-.pyc
+.gradle/
 local.properties
+.DS_Store
+
+# Diretórios de build e de saída
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/

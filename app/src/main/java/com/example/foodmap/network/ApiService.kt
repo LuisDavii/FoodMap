@@ -16,7 +16,7 @@ interface ApiService {
 
 // ✅ Request para login
 data class LoginRequest(
-    val userName: String,
+    val username: String,
     val password: String
 )
 
@@ -29,7 +29,7 @@ data class LoginResponse(
 // ✅ Dados do usuário retornados no login
 data class UsuarioResponse(
     val id: Int,
-    val userName: String,
+    val username: String,
     val name: String,
     val email: String
 )
@@ -38,5 +38,5 @@ data class UsuarioResponse(
 data class ApiResponse(
     val message: String,
     val id: Int? = null,
-    val userName: String? = null
+    val username: String? = null
 )

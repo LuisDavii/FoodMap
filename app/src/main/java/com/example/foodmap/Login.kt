@@ -75,7 +75,7 @@ class Login : AppCompatActivity() {
         val password = editTextPassword.text.toString()
 
         val loginRequest = LoginRequest(
-            userName = username,
+            username = username,
             password = password
         )
 
@@ -127,13 +127,13 @@ class Login : AppCompatActivity() {
         with(sharedPref.edit()) {
             putInt("user_id", usuario.id)
             putString("user_name", usuario.name)
-            putString("user_username", usuario.userName)
+            putString("user_username", usuario.username)
             putString("user_email", usuario.email)
             putBoolean("is_logged_in", true)
             apply()
         }
 
-        println("✅ Usuário logado: ${usuario.name} (${usuario.userName})")
+        println("✅ Usuário logado: ${usuario.name} (${usuario.username})")
     }
 
     private fun redirecionarParaMain() {
