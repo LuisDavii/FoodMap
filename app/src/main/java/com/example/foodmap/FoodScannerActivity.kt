@@ -1,7 +1,6 @@
 package com.example.foodmap.network
-// ATENÇÃO: Se o seu pacote raiz for diferente (ex: com.example.meuapp),
-// você deve ajustar o 'import R' abaixo para corresponder ao seu pacote raiz.
 
+import android.content.Intent // <-- MUDANÇA 1: IMPORT ADICIONADO
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,8 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
-// ESTE É O IMPORT QUE RESOLVE O ERRO 'UNRESOLVED REFERENCE R'
-import com.example.foodmap.R // *** AJUSTE ESTE IMPORT PARA O SEU PACOTE RAIZ ***
+import com.example.foodmap.HistoryActivity // <-- MUDANÇA 2: IMPORT ADICIONADO
+import com.example.foodmap.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,7 +31,7 @@ class FoodScannerActivity : AppCompatActivity() {
 
     // Componentes da UI
     private lateinit var textViewLoggedInUser: TextView
-    private lateinit var buttonLogout: Button
+    private lateinit var buttonHistory: Button // <-- MUDANÇA 3: NOME DA VARIÁVEL CORRIGIDO
     private lateinit var buttonScan: Button
     private lateinit var cameraPreview: View // Placeholder para a superfície da câmera
     private lateinit var cardResult: CardView
@@ -46,7 +45,6 @@ class FoodScannerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // O ID do layout (activity_food_scanner)
         setContentView(R.layout.activity_scanner)
 
         // 1. Inicializa as Views
@@ -62,7 +60,7 @@ class FoodScannerActivity : AppCompatActivity() {
     private fun initializeViews() {
         // Inicializa elementos do Header
         textViewLoggedInUser = findViewById(R.id.textViewLoggedInUser)
-        buttonLogout = findViewById(R.id.buttonHistory)
+        buttonHistory = findViewById(R.id.buttonHistory) // <-- MUDANÇA 4: NOME DA VARIÁVEL CORRIGIDO
 
         // Inicializa elementos do Scanner
         cameraPreview = findViewById(R.id.cameraPreview)
@@ -81,16 +79,15 @@ class FoodScannerActivity : AppCompatActivity() {
 
         // Garante que o cartão de resultado esteja inicialmente oculto
         cardResult.visibility = View.GONE
-
-        // --- PLACEHOLDER DA CÂMERA ---
-        // Em um projeto real, aqui você inicializaria o CameraX ou uma SurfaceView
-        // e faria a solicitação de permissões de câmera.
     }
 
     private fun setupClickListeners() {
-        // Lógica para o botão SAIR
-        buttonLogout.setOnClickListener {
-            handleLogout()
+        // Lógica para o botão VER HISTÓRICO
+        buttonHistory.setOnClickListener { // <-- MUDANÇA 5: NOME DA VARIÁVEL CORRIGIDO
+            // Cria a intenção de ir para a tela de histórico
+            val intent = Intent(this, HistoryActivity::class.java)
+            // Inicia a nova tela
+            startActivity(intent)
         }
 
         // Lógica para o botão ANALISAR ALIMENTO
@@ -103,13 +100,7 @@ class FoodScannerActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Simula a lógica de logout.
-     */
-    private fun handleLogout() {
-        Toast.makeText(this, "Usuário $loggedInUserName desconectado.", Toast.LENGTH_SHORT).show()
-        // Adicione aqui a navegação para a tela de Login
-    }
+    // <-- MUDANÇA 6: FUNÇÃO ANTIGA E NÃO UTILIZADA 'handleLogout' FOI REMOVIDA
 
     /**
      * Inicia a simulação de análise de alimentos.
@@ -122,21 +113,12 @@ class FoodScannerActivity : AppCompatActivity() {
         cardResult.visibility = View.GONE
         Toast.makeText(this, "Análise de imagem iniciada...", Toast.LENGTH_LONG).show()
 
-        // Usa lifecycleScope para iniciar uma coroutine vinculada ao ciclo de vida da Activity
         lifecycleScope.launch {
-            // 1. Simulação do Processamento (em thread de IO/Background)
             val result = withContext(Dispatchers.IO) {
-                // Simula um atraso de rede/processamento de 3 segundos
                 delay(3000)
-
-                // Retorna um resultado de análise simulado
                 return@withContext generateFoodAnalysis()
             }
-
-            // 2. Atualização da UI (de volta na thread Principal)
             updateUIWithAnalysis(result)
-
-            // 3. Finaliza o estado de scanning
             isScanning = false
             buttonScan.isEnabled = true
             buttonScan.text = "ANALISAR ALIMENTO"
@@ -160,12 +142,9 @@ class FoodScannerActivity : AppCompatActivity() {
      * Atualiza os campos de texto do CardView com os resultados da análise.
      */
     private fun updateUIWithAnalysis(analysis: FoodAnalysis) {
-        // Define o texto nos TextViews
         textViewFoodName.text = "Alimento: ${analysis.name}"
         textViewCalories.text = "Calorias (100g): ${analysis.caloriesKcal} kcal"
         textViewProtein.text = "Proteína: ${analysis.proteinGrams}g | Fibra: ${analysis.fiberGrams}g"
-
-        // Torna o cartão visível
         cardResult.visibility = View.VISIBLE
     }
 }
