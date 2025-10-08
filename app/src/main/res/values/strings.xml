@@ -1,4 +1,5 @@
 <resources>
+    <!-- Login/Cadastro -->
     <string name="titulo_login">Login</string>
     <string name="login_sucesso">Login realizado com sucesso!</string>
     <string name="login_falha">Usuário ou senha inválidos.</string>
@@ -14,4 +15,35 @@
     <string name="ja_possui_conta"><u> Já possui uma conta? Faça login </u></string>
     <string name="insira_seu_nome_completo">Insira seu Nome Completo</string>
     <string name="insira_seu_Usuario">Insira seu Usuário</string>
+
+    <!-- Strings do FoodScannerActivity.kt -->
+    <string name="instructions_scan">APONTE E ESCANEIE SEU ALIMENTO</string>
+    <string name="analysis_title">RESULTADO DA ANÁLISE</string>
+
+    <!-- Scanner e Títulos -->
+    <string name="scanner_title">Posicione o Alimento ou Código de Barras</string>
+    <string name="scanner_button">Escanear Alimento</string>
+    <string name="results_title">Resultado do Scan:</string>
+
+    <!-- Strings com placeholders (%s) para formatação -->
+    <string name="label_welcome_user">Olá, %s!</string>
+    <string name="label_food_name">Alimento: %s</string>
+    <string name="label_calories">Calorias (100g): %s kcal</string>
+    <string name="label_protein">Proteína: %1$s | Fibra: %2$s</string>
+
+    <!-- Histórico -->
+    <string name="historico_scans">Histórico de Scans</string>
+    <string name="history_empty_state">Nenhum scan encontrado.\nEscaneie um alimento para começar a registrar seu histórico.</string>
+
+    <!-- Ações e Botões -->
+    <string name="action_logout">SAIR</string>
+    <string name="action_history">VER HISTÓRICO</string>
+    <string name="action_save_scan">SALVAR SCAN</string> <!-- NOVO BOTÃO ADICIONADO AQUI -->
+
+    <string name="botao_escanear">ANALISAR ALIMENTO</string>
+    <string name="botao_historico">Ver Histórico</string>
+    <string name="button_analyzing">ANALISANDO...</string>
+    <string name="scan_started_toast">Análise de imagem iniciada...</string>
+    <string name="scan_complete_toast">Análise concluída!</string>
+    <string name="scan_wait_toast">Aguarde, a análise anterior está em andamento.</string>
 </resources>

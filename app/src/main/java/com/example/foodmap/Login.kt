@@ -1,14 +1,17 @@
 package com.example.foodmap
 
+// <-- MUDANÇA 1: ADICIONADO O IMPORT PARA A TELA DO SCANNER
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.foodmap.network.FoodScannerActivity
 import com.example.foodmap.network.LoginRequest
 import com.example.foodmap.network.LoginResponse
 import com.example.foodmap.network.RetrofitClient
+import com.example.foodmap.network.UsuarioResponse
 
 class Login : AppCompatActivity() {
 
@@ -98,8 +101,8 @@ class Login : AppCompatActivity() {
                         // Salvar dados do usuário (SharedPreferences, etc.)
                         salvarDadosUsuario(usuario)
 
-                        // Redirecionar para a MainActivity
-                        redirecionarParaMain()
+                        // Redirecionar para a tela correta
+                        redirecionarParaScanner() // Renomeei a função para mais clareza
                     }
                 } else {
                     val errorMessage = when (response.code()) {
@@ -120,7 +123,7 @@ class Login : AppCompatActivity() {
         })
     }
 
-    private fun salvarDadosUsuario(usuario: com.example.foodmap.network.UsuarioResponse) {
+    private fun salvarDadosUsuario(usuario: UsuarioResponse) {
         // ✅ Aqui você pode salvar os dados do usuário logado
         // Exemplo usando SharedPreferences:
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -136,9 +139,10 @@ class Login : AppCompatActivity() {
         println("✅ Usuário logado: ${usuario.name} (${usuario.username})")
     }
 
-    private fun redirecionarParaMain() {
+    private fun redirecionarParaScanner() { // Função renomeada
         // ✅ Redirecionar para a tela principal
-        val intent = Intent(this, MainActivity::class.java)
+        // <-- MUDANÇA 2: ALTERADO O DESTINO DA NAVEGAÇÃO
+        val intent = Intent(this, FoodScannerActivity::class.java)
         startActivity(intent)
         finish() // Fecha a tela de login
     }

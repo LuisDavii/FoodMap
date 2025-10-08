@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@android:color/white">
+
+        <!-- Nome do Alimento (Título) -->
+        <TextView
+            android:id="@+id/textViewItemFoodName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Brócolis Cozido"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"/>
+
+        <!-- Data/Hora do Scan -->
+        <TextView
+            android:id="@+id/textViewItemTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Escaneado em: 25/10/2025 - 14:30"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- Detalhes Nutricionais -->
+        <TextView
+            android:id="@+id/textViewItemDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="34 kcal | Proteína: 2.8g | Fibra: 2.6g"
+            android:textSize="14sp"
+            android:textColor="#FF9800"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
