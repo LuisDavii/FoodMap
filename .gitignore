@@ -3,6 +3,7 @@
 # Arquivos de bytecode (compilados)
 *.pyc
 __pycache__/
+__pycache__
 
 # Ambiente virtual
 venv/

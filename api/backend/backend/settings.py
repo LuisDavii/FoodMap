@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [ 'localhost',
     '127.0.0.1',
     '10.0.2.2',  # Emulador Android
     '0.0.0.0',   # Todas as interfaces de rede
-    '26.49.230.46',  # Substitua pelo SEU IP local
+    '192.168.1.141',  # Substitua pelo SEU IP local
     ]
 
 
