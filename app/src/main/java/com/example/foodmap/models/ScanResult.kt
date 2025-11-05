@@ -1,10 +1,13 @@
-package com.example.foodmap // Verifique se o pacote está correto
+package com.example.foodmap
 
-// Data class para representar um único resultado de scan salvo no histórico.
+/**
+ * Representa um único resultado de scan salvo no histórico.
+ * Usado pelo HistoryManager e pela HistoryActivity.
+ */
 data class ScanResult(
     val foodName: String,
     val calories: Int,
     val protein: Double,
     val fiber: Double,
-    val timestamp: String // Usaremos String para simplificar a data e hora
+    val timestamp: String // Data e hora que o scan foi salvo
 )

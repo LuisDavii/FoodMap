@@ -14,17 +14,24 @@ class HistoryActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewHistory)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val historyData = createMockData()
+        // MUDANÇA: Carrega os dados reais do HistoryManager
+        val historyData = HistoryManager.getHistory(this)
 
+        // (Opcional: Mostrar uma mensagem se o histórico estiver vazio)
+        // val emptyMessage = findViewById<TextView>(R.id.textViewEmptyHistory) // Você precisaria adicionar este TextView ao seu layout
+        // if (historyData.isEmpty()) {
+        //     emptyMessage.visibility = View.VISIBLE
+        //     recyclerView.visibility = View.GONE
+        // } else {
+        //     emptyMessage.visibility = View.GONE
+        //     recyclerView.visibility = View.VISIBLE
+        // }
+
+        // Configura o adapter com os dados reais
         val adapter = HistoryAdapter(historyData)
         recyclerView.adapter = adapter
     }
 
-    private fun createMockData(): List<ScanResult> {
-        return listOf(
-            ScanResult("Brócolis Cozido", 34, 2.8, 2.6, "07/10/2025 14:05"),
-            ScanResult("Maçã Fuji", 52, 0.3, 2.4, "07/10/2025 09:22"),
-            ScanResult("Peito de Frango Grelhado", 165, 31.0, 0.0, "06/10/2025 19:45")
-        )
-    }
+    // MUDANÇA: A data class ScanResult foi movida para o seu próprio ficheiro (ScanResult.kt)
+    // MUDANÇA: A função createMockData() foi removida pois não é mais necessária.
 }

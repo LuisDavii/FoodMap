@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
+import com.example.foodmap.network.FoodScannerActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val btnAbrirCamera: Button = findViewById(R.id.btnAbrirCamera)
         btnAbrirCamera.setOnClickListener {
-            val intent = Intent(this, CameraActivity::class.java)
+            val intent = Intent(this, FoodScannerActivity::class.java)
             startActivity(intent)
         }
     }

@@ -75,115 +75,123 @@
         android:layout_marginTop="24dp" />
 
     <!-- 4. Área de Pré-visualização da Câmera -->
-    <View
+
+    <!-- 5. Botão de Scan (Laranja, Proeminente e com Borda Arredondada) -->
+    <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        android:background="@android:color/black"
-        app:layout_constraintDimensionRatio="1:1.2"
-        app:layout_constraintTop_toBottomOf="@id/textViewInstructions"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginHorizontal="8dp"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintBottom_toTopOf="@id/buttonScan"
-        tools:layout_height="350dp"
+        android:layout_marginTop="24dp"
+        android:alpha="0.9"
+        android:background="@android:color/black"
+        android:clipToOutline="true"
         android:elevation="6dp"
         android:outlineProvider="background"
-        android:clipToOutline="true"
-        android:alpha="0.9"
-        tools:targetApi="31"/>
+        app:layout_constraintBottom_toTopOf="@id/buttonScan"
+        app:layout_constraintDimensionRatio="1:1.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewInstructions"
+        app:layout_constraintVertical_bias="0"
+        tools:layout_height="350dp"
+        tools:targetApi="31" />
 
-    <!-- 5. Botão de Scan (Laranja, Proeminente e com Borda Arredondada) -->
+    <!-- 6. Cartão de Resultado (Agora com um botão de SALVAR) -->
+
     <Button
         android:id="@+id/buttonScan"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
+        android:padding="14dp"
         android:text="@string/botao_escanear"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:padding="14dp"
-        app:cornerRadius="16dp"
         app:backgroundTint="#FF9800"
-        app:layout_constraintTop_toBottomOf="@+id/cameraPreview"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreview" />
 
-    <!-- 6. Cartão de Resultado (Agora com um botão de SALVAR) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardResult"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:visibility="gone"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/buttonScan"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonScan"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:visibility="visible"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/analysis_title"
+                android:textColor="#FF9800"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#FF9800"/>
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#EEEEEE"
-                android:layout_marginVertical="8dp"/>
+                android:layout_marginVertical="8dp"
+                android:background="#EEEEEE" />
 
             <TextView
                 android:id="@+id/textViewFoodName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                tools:text="Alimento: Brócolis Cozido"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                tools:text="Alimento: Brócolis Cozido" />
 
             <TextView
                 android:id="@+id/textViewCalories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                tools:text="Calorias (100g): 34 kcal"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="16sp"
-                android:textColor="@android:color/darker_gray"/>
+                tools:text="Calorias (100g): 34 kcal" />
 
             <TextView
                 android:id="@+id/textViewProtein"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Proteína: 2.8g | Fibra: 2.6g"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="16sp"
-                android:textColor="@android:color/darker_gray"/>
+                tools:text="Proteína: 2.8g | Fibra: 2.6g" />
 
             <!-- Novo Botão para SALVAR o Scan -->
             <Button
                 android:id="@+id/buttonSaveScan"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
+                android:layout_width="348dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_border_orange"
                 android:text="@string/action_save_scan"
                 android:textColor="#F0C609"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@drawable/rounded_border_orange" />
+                tools:visibility="visible" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
