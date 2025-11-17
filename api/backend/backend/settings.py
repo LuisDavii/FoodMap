@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [ 'localhost',
     '127.0.0.1',
     '10.0.2.2',  # Emulador Android
     '0.0.0.0',   # Todas as interfaces de rede
-    '192.168.18.136',  # Substitua pelo SEU IP local
+    '172.20.10.3',  # Substitua pelo SEU IP local
     ]
 
 
@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'foodMap',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': '123123',
-        'HOST': '26.3.73.152',   
+        'PASSWORD': 'Foodmap123!',
+        'HOST': 'foodmap.cl4uqq66wqnb.us-east-2.rds.amazonaws.com',   
         
     }
 }

@@ -14,6 +14,13 @@
     "fiberGrams": 6.7
   },
   {
+  "key": "donuts",
+  "name": "donut",
+  "caloriesKcal": 160,
+  "proteinGrams": 2.0,
+  "fiberGrams": 6.7
+}
+  {
     "key": "banana",
     "name": "Banana",
     "caloriesKcal": 89,
