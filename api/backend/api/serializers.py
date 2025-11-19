@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import AlimentoPlanoAlimentar
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +17,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+    
+class RefeicaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AlimentoPlanoAlimentar
+        fields = ['id', 'usuario', 'dia_semana', 'tipo_refeicao', 'descricao', 'calorias', 'concluido']

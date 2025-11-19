@@ -38,7 +38,7 @@
     <!-- Ações e Botões -->
     <string name="action_logout">SAIR</string>
     <string name="action_history">VER HISTÓRICO</string>
-    <string name="action_save_scan">SALVAR SCAN</string> <!-- NOVO BOTÃO ADICIONADO AQUI -->
+    <string name="action_save_scan">Adicionar a Dieta</string>
 
     <string name="botao_escanear">ANALISAR ALIMENTO</string>
     <string name="botao_historico">Ver Histórico</string>

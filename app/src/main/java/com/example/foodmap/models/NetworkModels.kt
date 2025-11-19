@@ -1,7 +1,8 @@
 package com.example.foodmap.models
 
-import com.google.gson.annotations.SerializedName
 import com.example.foodmap.network.Usuario
+import com.google.gson.annotations.SerializedName
+
 // Request de Login
 data class LoginRequest(
     @SerializedName("userName") // ou "username", conforme sua API
@@ -20,7 +21,28 @@ data class LoginResponse(
     val usuario: Usuario?
 )
 
-// Response Genérico (usado no cadastro)
+data class RefeicaoRequest(
+    val dia_semana: String,
+    val tipo_refeicao: String,
+    val descricao: String,
+    val calorias: Int,
+    val usuario_id: Int, // Importante para vincular ao usuário
+    val concluido: Boolean = false // Padrão como não concluído
+)
+
+data class RefeicaoResponse(
+    val id: Int,
+    val dia_semana: String,
+    val tipo_refeicao: String,
+    val descricao: String,
+    val calorias: Int,
+    val concluido: Boolean
+)
+
+data class StatusRequest(
+    val concluido: Boolean
+)
+
 data class ApiResponse(
     val message: String,
     val id: Int? = null,

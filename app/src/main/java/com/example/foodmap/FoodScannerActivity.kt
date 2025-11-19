@@ -1,19 +1,5 @@
 package com.example.foodmap.network
 
-// Imports de UI e Navegação
-
-// Imports do CameraX
-
-// Imports do TFLite
-
-// Imports de IO e Concorrência
-
-// Imports do Projeto
-// <-- MUDANÇA: Importa o ScanResult que será usado para salvar
-// <-- MUDANÇA: Importa o FoodDatabaseEntry que será usado para ler o JSON
-
-
-// MUDANÇA: Imports para ler JSON (Gson)
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -31,15 +17,15 @@ import androidx.camera.view.PreviewView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.foodmap.AddMealActivity
 import com.example.foodmap.FoodDatabaseEntry
-import com.example.foodmap.HistoryActivity
-import com.example.foodmap.HistoryManager
 import com.example.foodmap.R
 import com.example.foodmap.ScanResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
+import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
@@ -55,10 +41,9 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class FoodScannerActivity : AppCompatActivity() {
-
-    // --- Componentes da UI (sem alteração) ---
+    private val CONFIDENCE_THRESHOLD = 0.70f
     private lateinit var textViewLoggedInUser: TextView
-    private lateinit var buttonHistory: Button
+
     private lateinit var buttonScan: Button
     private lateinit var cameraPreview: PreviewView
     private lateinit var cardResult: CardView
@@ -67,14 +52,9 @@ class FoodScannerActivity : AppCompatActivity() {
     private lateinit var textViewProtein: TextView
     private lateinit var buttonSaveScan: Button
 
-    // --- Lógica de Estado ---
-    private val loggedInUserName = "João" // (Isto pode ser atualizado para buscar o nome salvo no Login)
-
-    // <-- CORREÇÃO 1: O tipo da variável foi alterado para ScanResult
-    // Esta variável guarda o ÚLTIMO resultado exibido na tela, pronto para ser salvo.
+    private val loggedInUserName = "Testee"
     private var currentScanResult: ScanResult? = null
 
-    // --- Propriedades da Câmera e TFLite (sem alteração) ---
     private lateinit var interpreter: Interpreter
     private lateinit var labels: List<String>
     private lateinit var cameraExecutor: ExecutorService
@@ -83,28 +63,19 @@ class FoodScannerActivity : AppCompatActivity() {
     @Volatile
     private var currentPredictedFood: String? = null
 
-    // --- MUDANÇA: Nossa nova base de dados em memória ---
     private lateinit var foodDatabase: Map<String, FoodAnalysis>
 
-    // ---
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scanner)
 
-        // MUDANÇA: 1. Carrega a nossa base de dados JSON
         loadFoodDatabase()
 
-        // 2. Inicializa as Views da UI
         initializeViews()
 
-        // 3. Configura a UI inicial (Nome de usuário, etc.)
-        setupInitialUI()
-
-        // 4. Configura os Listeners de Clique (Botões)
         setupClickListeners()
 
-        // 5. Configura a Câmera e o Modelo TFLite
         cameraExecutor = Executors.newSingleThreadExecutor()
         if (isCameraPermissionGranted()) {
             setupModelAndLabels()
@@ -118,20 +89,14 @@ class FoodScannerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Desliga o executor da câmera para evitar memory leaks
         cameraExecutor.shutdown()
     }
 
     private fun initializeViews() {
-        // Header
-        textViewLoggedInUser = findViewById(R.id.textViewLoggedInUser)
-        buttonHistory = findViewById(R.id.buttonHistory)
 
-        // Câmera e Scan
         cameraPreview = findViewById(R.id.cameraPreview)
         buttonScan = findViewById(R.id.buttonScan)
 
-        // Card de Resultado
         cardResult = findViewById(R.id.cardResult)
         textViewFoodName = findViewById(R.id.textViewFoodName)
         textViewCalories = findViewById(R.id.textViewCalories)
@@ -139,24 +104,10 @@ class FoodScannerActivity : AppCompatActivity() {
         buttonSaveScan = findViewById(R.id.buttonSaveScan)
     }
 
-    private fun setupInitialUI() {
-        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val userName = sharedPref.getString("user_name", "Visitante")
 
-        // ADICIONE ESTA LINHA PARA TESTAR:
-        Toast.makeText(this, "Lendo nome: $userName", Toast.LENGTH_LONG).show()
-
-        textViewLoggedInUser.text = "Olá, $userName!"
-        cardResult.visibility = View.GONE
-    }
     private fun setupClickListeners() {
-        // Botão VER HISTÓRICO
-        buttonHistory.setOnClickListener {
-            val intent = Intent(this, HistoryActivity::class.java)
-            startActivity(intent)
-        }
 
-        // Botão ANALISAR ALIMENTO (MUDANÇA DE LÓGICA)
+
         buttonScan.setOnClickListener {
             val foodName = currentPredictedFood
 
@@ -165,19 +116,25 @@ class FoodScannerActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // MUDANÇA: Agora usa a nossa nova função que consulta a base de dados
+
             val analysis = generateFoodAnalysis(foodName)
 
             updateUIWithAnalysis(analysis)
         }
 
-        // NOVO: Listener para o botão SALVAR SCAN
+
         buttonSaveScan.setOnClickListener {
             currentScanResult?.let { resultToSave ->
-                // Usa o HistoryManager para salvar o item
-                HistoryManager.saveScan(this, resultToSave)
-                Toast.makeText(this, "Salvo no histórico!", Toast.LENGTH_SHORT).show()
-            } ?: Toast.makeText(this, "Nenhum resultado para salvar.", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, AddMealActivity::class.java)
+
+                intent.putExtra("FOOD_NAME", resultToSave.foodName)
+                intent.putExtra("FOOD_CALORIES", resultToSave.calories)
+
+                startActivity(intent)
+            } ?: run {
+                Toast.makeText(this, "Nenhum alimento identificado para adicionar.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -186,18 +143,15 @@ class FoodScannerActivity : AppCompatActivity() {
      * Atualiza o CardView com os resultados da análise.
      */
     private fun updateUIWithAnalysis(analysis: FoodAnalysis) {
-        // Atualiza os textos
+
         textViewFoodName.text = "Alimento: ${analysis.name}"
         textViewCalories.text = "Calorias (100g): ${analysis.caloriesKcal} kcal"
         textViewProtein.text = "Proteína: ${analysis.proteinGrams}g | Fibra: ${analysis.fiberGrams}g"
 
-        // Exibe o card
         cardResult.visibility = View.VISIBLE
 
-        // Cria o objeto de dados que pode ser salvo
         val timestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
 
-        // <-- CORREÇÃO 2: Criamos um ScanResult (que o HistoryManager espera)
         currentScanResult = ScanResult(
             foodName = analysis.name,
             calories = analysis.caloriesKcal,
@@ -207,30 +161,23 @@ class FoodScannerActivity : AppCompatActivity() {
         )
     }
 
-    // --- MUDANÇAS PRINCIPAIS AQUI ---
-
     /**
      * MUDANÇA: Esta função agora lê o nosso 'food_database.json'
      * e o carrega para um Map em memória para acesso rápido.
      */
     private fun loadFoodDatabase() {
         try {
-            // 1. Abre o ficheiro JSON da pasta 'assets'
             val jsonString = assets.open("food_database.json")
                 .bufferedReader()
                 .use { it.readText() }
 
-            // 2. Define o "tipo" que o Gson deve esperar (uma Lista de FoodDatabaseEntry)
             val listType = object : TypeToken<List<FoodDatabaseEntry>>() {}.type
 
-            // 3. Converte o JSON (string) para uma Lista de objetos
             val entries: List<FoodDatabaseEntry> = Gson().fromJson(jsonString, listType)
 
-            // 4. Converte a Lista num Map para acesso instantâneo
             foodDatabase = entries.associateBy(
-                { it.key }, // Chave do Map
+                { it.key },
                 {
-                    // Valor do Map
                     FoodAnalysis(
                         it.name,
                         it.caloriesKcal,
@@ -245,7 +192,7 @@ class FoodScannerActivity : AppCompatActivity() {
         } catch (e: IOException) {
             Log.e("FoodScannerActivity", "Erro ao ler food_database.json", e)
             Toast.makeText(this, "Erro ao carregar base de dados de alimentos.", Toast.LENGTH_LONG).show()
-            foodDatabase = emptyMap() // Garante que a app não falhe
+            foodDatabase = emptyMap()
         }
     }
 
@@ -254,26 +201,15 @@ class FoodScannerActivity : AppCompatActivity() {
      * Em vez de um 'when' statement, agora ela consulta o nosso Map.
      */
     private fun generateFoodAnalysis(foodName: String): FoodAnalysis {
-        // 1. Procura o 'foodName' (ex: "broccoli") no nosso Map.
         val data = foodDatabase[foodName.lowercase()]
 
         if (data != null) {
-            // 2. Se encontrou, retorna os dados do JSON
             return data
         } else {
-            // 3. Se não encontrou, retorna um resultado padrão (igual a antes)
             Log.w("FoodScannerActivity", "Alimento '$foodName' não encontrado na base de dados JSON.")
-            // <-- CORREÇÃO 3: Removido o '0' extra. A assinatura é (String, Int, Double, Double)
             return FoodAnalysis(foodName, 0, 0.0, 0.0)
         }
     }
-
-    // --- (Fim das Mudanças Principais) ---
-
-
-    // =======================================================================
-    // == LÓGICA DE CÂMERA E TFLITE (sem alteração)
-    // =======================================================================
 
     private fun isCameraPermissionGranted() =
         ContextCompat.checkSelfPermission(
@@ -301,38 +237,34 @@ class FoodScannerActivity : AppCompatActivity() {
     private var outputBuffer: ByteBuffer? = null
     private var outputShape: IntArray? = null
 
-    // ---
-
     private fun setupModelAndLabels() {
         try {
-            // <-- CORREÇÃO 1: Carrega o seu novo modelo
+
             val modelBuffer = loadModelFile("meu_modelo_comida.tflite")
             interpreter = Interpreter(modelBuffer)
 
-            // <-- CORREÇÃO 2: Carrega o seu novo ficheiro de labels
+
             labels = FileUtil.loadLabels(this, "labels_comida.txt")
 
-            // --- Lógica de Input (Entrada) ---
+
             val inputTensor = interpreter.getInputTensor(0)
             val inputShape = inputTensor.shape()
-            modelInputHeight = inputShape[1] // ex: 224
-            modelInputWidth = inputShape[2]  // ex: 224
+            modelInputHeight = inputShape[1]
+            modelInputWidth = inputShape[2]
 
-            // <-- CORREÇÃO 3: Guarda o TIPO de dados (ex: FLOAT32)
+
             modelInputDataType = inputTensor.dataType()
 
-            // --- Lógica de Output (Saída) ---
+
             val outputTensor = interpreter.getOutputTensor(0)
 
-            // <-- CORREÇÃO 4: Guarda o formato e tamanho da saída
-            outputShape = outputTensor.shape() // ex: [1, 55]
-            val outputType = outputTensor.dataType() // ex: FLOAT32
 
-            // Aloca o buffer de saída com o tamanho CORRETO
-            // (ex: 55 labels * 4 bytes/float = 220 bytes)
+            outputShape = outputTensor.shape()
+            val outputType = outputTensor.dataType()
+
             val outputSizeInBytes = outputShape!![1] * outputType.byteSize()
             outputBuffer = ByteBuffer.allocateDirect(outputSizeInBytes)
-            outputBuffer!!.order(java.nio.ByteOrder.nativeOrder()) // Importante
+            outputBuffer!!.order(java.nio.ByteOrder.nativeOrder())
 
         } catch (e: Exception) {
             Log.e("FoodScannerActivity", "Erro ao carregar modelo ou labels.", e)
@@ -367,50 +299,26 @@ class FoodScannerActivity : AppCompatActivity() {
                         val bitmap = imageProxy.toBitmap()
                         if (bitmap != null) {
 
-                            // --- INÍCIO DA CORREÇÃO ---
-
-                            // MUDANÇA 1: Corrigir a ENTRADA (Input)
-                            // Temos de criar o TensorImage com o TIPO de dados correto
-                            // que lemos do modelo (ex: FLOAT32).
                             val tensorImage = TensorImage(modelInputDataType!!)
                             tensorImage.load(bitmap)
-
-                            // O processador de imagem (resize) continua igual
                             val imageProcessor = ImageProcessor.Builder()
                                 .add(ResizeOp(modelInputHeight, modelInputWidth, ResizeOp.ResizeMethod.BILINEAR))
-                                // NOTA: Se o teu modelo FLOAT32 espera valores normalizados (ex: 0.0 a 1.0),
-                                // terias de adicionar aqui: .add(NormalizeOp(0f, 255f))
-                                // Por agora, vamos manter simples.
+                                .add(NormalizeOp(0.0f, 255.0f))
                                 .build()
                             val processedImage = imageProcessor.process(tensorImage)
 
-                            // MUDANÇA 2: Corrigir a SAÍDA (Output)
-                            // O código antigo estava a criar um novo 'outputBuffer' local e incorreto.
-                            // Vamos usar o 'outputBuffer' DA CLASSE, que foi inicializado
-                            // corretamente em 'setupModelAndLabels'.
 
-                            // 1. Prepara o buffer de saída da classe para ser escrito
                             outputBuffer!!.rewind()
 
-                            // 2. Executa o modelo
-                            //    Input: processedImage.buffer (agora com o tamanho correto)
-                            //    Output: outputBuffer (o da classe, com o tamanho correto)
                             interpreter.run(processedImage.buffer, outputBuffer!!)
 
-                            // 3. Prepara o buffer de saída da classe para ser lido
                             outputBuffer!!.rewind()
 
-                            // MUDANÇA 3: Ler os resultados como FLOAT
-                            // O código antigo lia os resultados como UINT8 (com 'and 0xFF'),
-                            // o que está incorreto para um modelo FLOAT32.
-
-                            // Assumindo que a saída do modelo é FLOAT32
                             val scores = outputBuffer!!.asFloatBuffer()
 
                             var maxScore = -Float.MAX_VALUE
                             var maxScoreIndex = -1
 
-                            // Loop para encontrar a pontuação mais alta
                             for (i in 0 until labels.size) {
                                 val score = scores.get(i)
                                 if (score > maxScore) {
@@ -418,10 +326,17 @@ class FoodScannerActivity : AppCompatActivity() {
                                     maxScoreIndex = i
                                 }
                             }
-                            // --- FIM DA CORREÇÃO ---
 
                             if (maxScoreIndex != -1) {
-                                currentPredictedFood = labels[maxScoreIndex]
+                                if (maxScore >= CONFIDENCE_THRESHOLD) {
+                                    currentPredictedFood = labels[maxScoreIndex]
+
+                                    Log.d("FoodScanner", "Detectado: ${labels[maxScoreIndex]} com ${(maxScore * 100).toInt()}%")
+                                } else {
+                                    currentPredictedFood = null
+
+                                    Log.d("FoodScanner", "Rejeitado: ${labels[maxScoreIndex]} com apenas ${(maxScore * 100).toInt()}%")
+                                }
                             }
                         }
                         imageProxy.close()

@@ -1,25 +1,11 @@
 [
   {
     "key": "apple",
-    "name": "Maçã Fuji",
+    "name": "Maçã",
     "caloriesKcal": 52,
     "proteinGrams": 0.3,
     "fiberGrams": 2.4
   },
-  {
-    "key": "avocado",
-    "name": "Abacate",
-    "caloriesKcal": 160,
-    "proteinGrams": 2.0,
-    "fiberGrams": 6.7
-  },
-  {
-  "key": "donuts",
-  "name": "donut",
-  "caloriesKcal": 160,
-  "proteinGrams": 2.0,
-  "fiberGrams": 6.7
-},
   {
     "key": "banana",
     "name": "Banana",
@@ -28,367 +14,31 @@
     "fiberGrams": 2.6
   },
   {
-    "key": "grape",
-    "name": "Uva",
-    "caloriesKcal": 69,
-    "proteinGrams": 0.7,
-    "fiberGrams": 0.9
-  },
-  {
-    "key": "kiwi",
-    "name": "Kiwi",
-    "caloriesKcal": 61,
-    "proteinGrams": 1.1,
-    "fiberGrams": 3.0
-  },
-  {
-    "key": "lemon",
-    "name": "Limão",
-    "caloriesKcal": 29,
-    "proteinGrams": 1.1,
-    "fiberGrams": 2.8
-  },
-  {
-    "key": "mango",
-    "name": "Manga",
-    "caloriesKcal": 60,
-    "proteinGrams": 0.8,
-    "fiberGrams": 1.6
-  },
-  {
-    "key": "orange",
-    "name": "Laranja",
-    "caloriesKcal": 47,
-    "proteinGrams": 0.9,
-    "fiberGrams": 2.4
-  },
-  {
-    "key": "papaya",
-    "name": "Mamão Papaya",
-    "caloriesKcal": 43,
-    "proteinGrams": 0.5,
-    "fiberGrams": 1.7
-  },
-  {
-    "key": "peach",
-    "name": "Pêssego",
-    "caloriesKcal": 39,
-    "proteinGrams": 0.9,
-    "fiberGrams": 1.5
-  },
-  {
-    "key": "pear",
-    "name": "Pera",
-    "caloriesKcal": 57,
-    "proteinGrams": 0.4,
-    "fiberGrams": 3.1
-  },
-  {
-    "key": "pineapple",
-    "name": "Abacaxi",
-    "caloriesKcal": 50,
-    "proteinGrams": 0.5,
-    "fiberGrams": 1.4
-  },
-  {
-    "key": "strawberry",
-    "name": "Morango",
-    "caloriesKcal": 32,
-    "proteinGrams": 0.7,
-    "fiberGrams": 2.0
-  },
-  {
-    "key": "watermelon",
-    "name": "Melancia",
-    "caloriesKcal": 30,
-    "proteinGrams": 0.6,
-    "fiberGrams": 0.4
-  },
-  {
-    "key": "bell_pepper",
-    "name": "Pimentão (Vermelho)",
-    "caloriesKcal": 31,
-    "proteinGrams": 1.0,
-    "fiberGrams": 2.1
-  },
-  {
-    "key": "broccoli",
-    "name": "Brócolis Cozido",
-    "caloriesKcal": 34,
-    "proteinGrams": 2.8,
-    "fiberGrams": 2.6
-  },
-  {
-    "key": "cabbage",
-    "name": "Repolho",
-    "caloriesKcal": 25,
-    "proteinGrams": 1.3,
-    "fiberGrams": 2.5
-  },
-  {
-    "key": "carrot",
-    "name": "Cenoura",
-    "caloriesKcal": 41,
-    "proteinGrams": 0.9,
-    "fiberGrams": 2.8
-  },
-  {
-    "key": "cauliflower",
-    "name": "Couve-flor",
-    "caloriesKcal": 25,
-    "proteinGrams": 1.9,
-    "fiberGrams": 2.0
-  },
-  {
-    "key": "cucumber",
-    "name": "Pepino",
-    "caloriesKcal": 15,
-    "proteinGrams": 0.7,
-    "fiberGrams": 0.5
-  },
-  {
-    "key": "garlic",
-    "name": "Alho",
-    "caloriesKcal": 149,
-    "proteinGrams": 6.4,
-    "fiberGrams": 2.1
-  },
-  {
-    "key": "lettuce",
-    "name": "Alface (Americana)",
-    "caloriesKcal": 14,
-    "proteinGrams": 0.9,
-    "fiberGrams": 1.2
-  },
-  {
-    "key": "onion",
-    "name": "Cebola",
-    "caloriesKcal": 40,
-    "proteinGrams": 1.1,
-    "fiberGrams": 1.7
-  },
-  {
-    "key": "potato",
-    "name": "Batata Cozida",
-    "caloriesKcal": 87,
-    "proteinGrams": 1.9,
-    "fiberGrams": 1.8
-  },
-  {
-    "key": "spinach",
-    "name": "Espinafre",
-    "caloriesKcal": 23,
-    "proteinGrams": 2.9,
-    "fiberGrams": 2.2
-  },
-  {
-    "key": "sweet_potato",
-    "name": "Batata Doce Cozida",
-    "caloriesKcal": 90,
-    "proteinGrams": 2.0,
-    "fiberGrams": 3.3
-  },
-  {
-    "key": "tomato",
-    "name": "Tomate",
-    "caloriesKcal": 18,
-    "proteinGrams": 0.9,
-    "fiberGrams": 1.2
-  },
-  {
-    "key": "zucchini",
-    "name": "Abobrinha",
-    "caloriesKcal": 17,
-    "proteinGrams": 1.2,
-    "fiberGrams": 1.0
-  },
-  {
-    "key": "beef",
-    "name": "Bife de Vaca (Grelhado)",
+    "key": "filet_mignon",
+    "name": "Filé Mignon",
     "caloriesKcal": 250,
-    "proteinGrams": 26.0,
-    "fiberGrams": 0.0
+    "proteinGrams": 26,
+    "fiberGrams": 0
   },
   {
-    "key": "chicken_breast",
-    "name": "Peito de Frango (Grelhado)",
-    "caloriesKcal": 165,
-    "proteinGrams": 31.0,
-    "fiberGrams": 0.0
+    "key": "french_fries",
+    "name": "Batata Frita",
+    "caloriesKcal": 312,
+    "proteinGrams": 3.4,
+    "fiberGrams": 3.8
   },
   {
-    "key": "egg",
-    "name": "Ovo Cozido",
-    "caloriesKcal": 155,
-    "proteinGrams": 13.0,
-    "fiberGrams": 0.0
+    "key": "hamburger",
+    "name": "Hambúrguer",
+    "caloriesKcal": 295,
+    "proteinGrams": 17,
+    "fiberGrams": 0.8
   },
   {
-    "key": "pork",
-    "name": "Bisteca de Porco (Grelhada)",
-    "caloriesKcal": 242,
-    "proteinGrams": 27.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "salmon",
-    "name": "Salmão (Grelhado)",
-    "caloriesKcal": 208,
-    "proteinGrams": 20.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "tofu",
-    "name": "Tofu",
-    "caloriesKcal": 76,
-    "proteinGrams": 8.0,
-    "fiberGrams": 1.9
-  },
-  {
-    "key": "tuna",
-    "name": "Atum (em lata, água)",
-    "caloriesKcal": 116,
-    "proteinGrams": 26.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "cheese",
-    "name": "Queijo (Mussarela)",
-    "caloriesKcal": 280,
-    "proteinGrams": 22.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "milk",
-    "name": "Leite (Integral)",
-    "caloriesKcal": 61,
-    "proteinGrams": 3.3,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "yogurt",
-    "name": "Iogurte (Natural)",
-    "caloriesKcal": 59,
-    "proteinGrams": 10.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "beans",
-    "name": "Feijão Preto (Cozido)",
-    "caloriesKcal": 132,
-    "proteinGrams": 8.9,
-    "fiberGrams": 8.7
-  },
-  {
-    "key": "bread",
-    "name": "Pão de Forma (Branco)",
-    "caloriesKcal": 265,
-    "proteinGrams": 9.0,
-    "fiberGrams": 2.7
-  },
-  {
-    "key": "brown_rice",
-    "name": "Arroz Integral (Cozido)",
-    "caloriesKcal": 111,
-    "proteinGrams": 2.6,
-    "fiberGrams": 1.8
-  },
-  {
-    "key": "lentil",
-    "name": "Lentilha (Cozida)",
-    "caloriesKcal": 116,
-    "proteinGrams": 9.0,
-    "fiberGrams": 7.9
-  },
-  {
-    "key": "oat",
-    "name": "Aveia (em flocos)",
-    "caloriesKcal": 389,
-    "proteinGrams": 16.9,
-    "fiberGrams": 10.6
-  },
-  {
-    "key": "pasta",
-    "name": "Macarrão (Cozido)",
-    "caloriesKcal": 131,
-    "proteinGrams": 5.0,
-    "fiberGrams": 1.8
-  },
-  {
-    "key": "quinoa",
-    "name": "Quinoa (Cozida)",
-    "caloriesKcal": 120,
-    "proteinGrams": 4.4,
-    "fiberGrams": 2.8
-  },
-  {
-    "key": "rice",
-    "name": "Arroz Branco (Cozido)",
-    "caloriesKcal": 130,
-    "proteinGrams": 2.7,
-    "fiberGrams": 0.4
-  },
-  {
-    "key": "almond",
-    "name": "Amêndoa",
-    "caloriesKcal": 579,
-    "proteinGrams": 21.0,
-    "fiberGrams": 12.5
-  },
-  {
-    "key": "dark_chocolate",
-    "name": "Chocolate Amargo (70%)",
-    "caloriesKcal": 598,
-    "proteinGrams": 7.8,
-    "fiberGrams": 10.9
-  },
-  {
-    "key": "honey",
-    "name": "Mel",
-    "caloriesKcal": 304,
-    "proteinGrams": 0.3,
-    "fiberGrams": 0.2
-  },
-  {
-    "key": "olive_oil",
-    "name": "Azeite de Oliva",
-    "caloriesKcal": 884,
-    "proteinGrams": 0.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "peanut",
-    "name": "Amendoim",
-    "caloriesKcal": 567,
-    "proteinGrams": 25.8,
-    "fiberGrams": 8.5
-  },
-  {
-    "key": "coffee",
-    "name": "Café (preto, sem açúcar)",
-    "caloriesKcal": 2,
-    "proteinGrams": 0.1,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "tea",
-    "name": "Chá (verde, sem açúcar)",
-    "caloriesKcal": 1,
-    "proteinGrams": 0.2,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "water",
-    "name": "Água",
-    "caloriesKcal": 0,
-    "proteinGrams": 0.0,
-    "fiberGrams": 0.0
-  },
-  {
-    "key": "soda",
-    "name": "Refrigerante (Cola)",
-    "caloriesKcal": 41,
-    "proteinGrams": 0.0,
-    "fiberGrams": 0.0
+    "key": "pizza",
+    "name": "Pizza",
+    "caloriesKcal": 266,
+    "proteinGrams": 11,
+    "fiberGrams": 2.3
   }
 ]
