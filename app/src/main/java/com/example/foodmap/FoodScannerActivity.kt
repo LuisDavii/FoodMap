@@ -140,14 +140,15 @@ class FoodScannerActivity : AppCompatActivity() {
     }
 
     private fun setupInitialUI() {
-        // Tenta buscar o nome do usuário salvo nas SharedPreferences do Login
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val userName = sharedPref.getString("user_name", loggedInUserName) // Usa "João" como padrão
+        val userName = sharedPref.getString("user_name", "Visitante")
+
+        // ADICIONE ESTA LINHA PARA TESTAR:
+        Toast.makeText(this, "Lendo nome: $userName", Toast.LENGTH_LONG).show()
 
         textViewLoggedInUser.text = "Olá, $userName!"
         cardResult.visibility = View.GONE
     }
-
     private fun setupClickListeners() {
         // Botão VER HISTÓRICO
         buttonHistory.setOnClickListener {

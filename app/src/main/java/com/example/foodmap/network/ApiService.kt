@@ -1,10 +1,9 @@
 package com.example.foodmap.network
 
-import com.example.foodmap.models.Usuario
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
-
+import com.example.foodmap.network.Usuario
 interface ApiService {
     @POST("api/usuarios/")
     fun cadastrarUsuario(@Body usuario: Usuario): Call<ApiResponse>
@@ -23,7 +22,7 @@ data class LoginRequest(
 // ✅ Response para login
 data class LoginResponse(
     val message: String,
-    val usuario: UsuarioResponse? = null
+    val usuario: Usuario? = null
 )
 
 // ✅ Dados do usuário retornados no login

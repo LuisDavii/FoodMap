@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.foodmap.models.Usuario
 import com.example.foodmap.network.ApiResponse
 import com.example.foodmap.network.RetrofitClient
+import com.example.foodmap.network.Usuario
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -103,11 +103,11 @@ class Cadastro : AppCompatActivity() {
     private fun cadastrarUsuario() {
         val usuario = Usuario(
             name = editNome.text.toString().trim(),
-            userName = editUserName.text.toString().trim(),
+            // AQUI ESTAVA O ERRO: mudamos de userName para username
+            username = editUserName.text.toString().trim(),
             email = editEmail.text.toString().trim(),
             password = editSenha.text.toString()
         )
-
         // Mostrar loading
         btnCriarConta.isEnabled = false
         btnCriarConta.text = "Cadastrando..."
