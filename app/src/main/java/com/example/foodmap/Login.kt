@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView // Importante: Importar TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foodmap.network.LoginRequest
@@ -19,7 +20,8 @@ class Login : AppCompatActivity() {
     private lateinit var editTextLogin: EditText
     private lateinit var editTextPassword: EditText
     private lateinit var buttonLogin: Button
-    private lateinit var buttonCadastrar: Button
+    // CORREÇÃO: Mudamos de Button para TextView para evitar o erro de Cast
+    private lateinit var buttonCadastrar: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,7 @@ class Login : AppCompatActivity() {
         editTextLogin = findViewById(R.id.editTextLogin)
         editTextPassword = findViewById(R.id.editTextPassword)
         buttonLogin = findViewById(R.id.buttonLogin)
+        // CORREÇÃO: O findViewById agora encontra um TextView sem dar erro
         buttonCadastrar = findViewById(R.id.button2)
     }
 
@@ -44,11 +47,11 @@ class Login : AppCompatActivity() {
             }
         }
 
-        // Botão Cadastrar
+        // Link Cadastrar (Agora é um TextView clicável)
         buttonCadastrar.setOnClickListener {
             val intent = Intent(this, Cadastro::class.java)
             startActivity(intent)
-            finish() // Fecha o Login para não voltar com o botão "Voltar"
+            finish()
         }
     }
 
@@ -85,30 +88,21 @@ class Login : AppCompatActivity() {
             password = password
         )
 
-        // UI: Mostrar que está carregando
         buttonLogin.isEnabled = false
         buttonLogin.text = "Entrando..."
 
-        // Chamada API com Retrofit
         RetrofitClient.instance.loginUsuario(loginRequest).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                // UI: Restaurar botão
                 buttonLogin.isEnabled = true
                 buttonLogin.text = "Entrar"
 
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
-
-                    // Verifica se o usuário veio na resposta
                     val usuario = loginResponse?.usuario
 
                     if (usuario != null) {
                         Toast.makeText(this@Login, "Bem-vindo, ${usuario.name}!", Toast.LENGTH_SHORT).show()
-
-                        // 1. Salva os dados no SharedPreferences
                         salvarDadosUsuario(usuario)
-
-                        // 2. Vai para a tela principal (WeeklyPlan)
                         irParaTelaPrincipal()
                     } else {
                         Toast.makeText(this@Login, "Erro: Dados do usuário vazios.", Toast.LENGTH_SHORT).show()
@@ -132,30 +126,21 @@ class Login : AppCompatActivity() {
         })
     }
 
-    /**
-     * Salva todos os dados importantes do usuário para usar nas outras telas
-     * (como o nome no Scanner).
-     */
     private fun salvarDadosUsuario(usuario: Usuario) {
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         with(sharedPref.edit()) {
             putInt("user_id", usuario.id)
-            putString("user_name", usuario.name)       // Importante para: "Olá, [Nome]"
+            putString("user_name", usuario.name)
             putString("user_username", usuario.username)
             putString("user_email", usuario.email)
             putBoolean("is_logged_in", true)
             apply()
         }
-        // Log para confirmação no Logcat
-        android.util.Log.d("Login", "Dados salvos para: ${usuario.name}")
     }
 
-    /**
-     * Redireciona para o Plano Semanal (Tela Principal)
-     */
     private fun irParaTelaPrincipal() {
         val intent = Intent(this, WeeklyPlanActivity::class.java)
         startActivity(intent)
-        finish() // Fecha a Activity de Login para o usuário não voltar para ela ao clicar em "Voltar"
+        finish()
     }
 }
