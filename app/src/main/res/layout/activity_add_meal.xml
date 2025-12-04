@@ -1,84 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF">
+    android:background="#E6E6E6"
+    android:fillViewport="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="32dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="?attr/homeAsUpIndicator"
+            app:tint="#FF5722"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitle" />
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nova Refeição"
-            android:textSize="28sp"
+            android:textColor="#FF5722"
+            android:textSize="32sp"
             android:textStyle="bold"
-            android:textColor="#EF5350"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toEndOf="@+id/btnBack"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tvLabelDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dia da Semana"
-            android:textColor="#666"/>
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Dia da semana"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/spinnerDay"
+            app:layout_constraintStart_toStartOf="@+id/spinnerDay"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
         <Spinner
             android:id="@+id/spinnerDay"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:drawable/btn_dropdown"/>
+            android:layout_height="55dp"
+            android:background="@drawable/bg_spinner_custom"
+            android:paddingStart="8dp"
+            android:paddingEnd="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabelDay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
+            android:id="@+id/tvLabelType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
             android:text="Tipo de Refeição"
-            android:textColor="#666"/>
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/spinnerType"
+            app:layout_constraintStart_toStartOf="@+id/spinnerType"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerDay" />
+
         <Spinner
             android:id="@+id/spinnerType"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:drawable/btn_dropdown"/>
+            android:layout_height="55dp"
+            android:background="@drawable/bg_spinner_custom"
+            android:paddingStart="8dp"
+            android:paddingEnd="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabelType"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
+            android:id="@+id/tvLabelDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="O que vai comer?"
-            android:textColor="#666"/>
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="O que vai comer:"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/etDescription"
+            app:layout_constraintStart_toStartOf="@+id/etDescription"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerType" />
+
         <EditText
             android:id="@+id/etDescription"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ex: Omelete com queijo"
-            android:padding="12dp"
-            android:background="@android:drawable/edit_text"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="55dp"
+            android:background="@drawable/bg_input_box"
+            android:hint=""
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:inputType="text"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabelDesc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
+            android:id="@+id/tvLabelCal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calorias (kcal)"
-            android:textColor="#666"/>
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Calorias(kcal)"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/etCalories"
+            app:layout_constraintStart_toStartOf="@+id/etCalories"
+            app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+
         <EditText
             android:id="@+id/etCalories"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
+            android:background="@drawable/bg_input_box"
+            android:hint=""
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:inputType="number"
-            android:hint="Ex: 350"
-            android:padding="12dp"
-            android:background="@android:drawable/edit_text"
-            android:layout_marginBottom="32dp"/>
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabelCal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSaveMeal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/bg_botao_laranja"
             android:text="Salvar Refeição"
-            android:backgroundTint="#EF5350"/>
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/etCalories"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

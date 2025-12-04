@@ -1,6 +1,7 @@
 package com.example.foodmap
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -26,14 +27,19 @@ class AddMealActivity : AppCompatActivity() {
         val etCalories = findViewById<EditText>(R.id.etCalories)
         val btnSaveMeal = findViewById<Button>(R.id.btnSaveMeal)
 
-        // Configurar os Spinners com opções simples
+        // MUDANÇA: Agora buscamos como View genérica ou ImageView, pois no XML é uma seta
+        val btnBack = findViewById<View>(R.id.btnBack)
+
+        // Configuração dos Spinners (usando nosso layout customizado)
         val days = arrayOf("Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo")
+        val adapterDays = ArrayAdapter(this, R.layout.item_spinner, days)
+        spinnerDay.adapter = adapterDays
+
         val types = arrayOf("Café da Manhã", "Almoço", "Jantar", "Lanche")
+        val adapterTypes = ArrayAdapter(this, R.layout.item_spinner, types)
+        spinnerType.adapter = adapterTypes
 
-        spinnerDay.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, days)
-        spinnerType.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, types)
-
-        // Receber dados da FoodScannerActivity
+        // Receber dados do Scanner
         val scannedName = intent.getStringExtra("FOOD_NAME")
         val scannedCalories = intent.getIntExtra("FOOD_CALORIES", 0)
 
@@ -42,25 +48,28 @@ class AddMealActivity : AppCompatActivity() {
             if (scannedCalories > 0) {
                 etCalories.setText(scannedCalories.toString())
             }
-            Toast.makeText(this, "Dados do Scanner carregados!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Alimento carregado!", Toast.LENGTH_SHORT).show()
         }
 
+        // Lógica do Botão Voltar (Seta no topo)
+        btnBack.setOnClickListener {
+            finish()
+        }
+
+        // Lógica do Botão Salvar
         btnSaveMeal.setOnClickListener {
-            val desc = etDescription.text.toString()
-            val calStr = etCalories.text.toString()
+            val desc = etDescription.text.toString().trim()
+            val calStr = etCalories.text.toString().trim()
 
             if (desc.isNotEmpty() && calStr.isNotEmpty()) {
-
-                // 1. Recuperar o ID do usuário logado (salvo no Login)
                 val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-                val userId = sharedPref.getInt("user_id", -1) // -1 se não achar
+                val userId = sharedPref.getInt("user_id", -1)
 
                 if (userId == -1) {
-                    Toast.makeText(this, "Erro: Usuário não identificado. Faça login novamente.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Erro: Faça login novamente.", Toast.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
 
-                // 2. Montar o objeto para envio
                 val novaRefeicao = RefeicaoRequest(
                     dia_semana = spinnerDay.selectedItem.toString(),
                     tipo_refeicao = spinnerType.selectedItem.toString(),
@@ -70,28 +79,26 @@ class AddMealActivity : AppCompatActivity() {
                     concluido = false
                 )
 
-                // 3. Desabilitar botão para evitar cliques duplos
                 btnSaveMeal.isEnabled = false
                 btnSaveMeal.text = "Salvando..."
 
-                // 4. Enviar para o Backend
                 RetrofitClient.instance.salvarRefeicao(novaRefeicao).enqueue(object : Callback<ApiResponse> {
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                         btnSaveMeal.isEnabled = true
                         btnSaveMeal.text = "Salvar Refeição"
 
                         if (response.isSuccessful) {
-                            Toast.makeText(this@AddMealActivity, "Refeição salva no plano!", Toast.LENGTH_SHORT).show()
-                            finish() // Fecha a tela e volta
+                            Toast.makeText(this@AddMealActivity, "Refeição adicionada!", Toast.LENGTH_SHORT).show()
+                            finish()
                         } else {
-                            Toast.makeText(this@AddMealActivity, "Erro ao salvar: ${response.code()}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@AddMealActivity, "Erro ao salvar", Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                         btnSaveMeal.isEnabled = true
                         btnSaveMeal.text = "Salvar Refeição"
-                        Toast.makeText(this@AddMealActivity, "Falha na conexão: ${t.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@AddMealActivity, "Erro de conexão", Toast.LENGTH_SHORT).show()
                     }
                 })
 
