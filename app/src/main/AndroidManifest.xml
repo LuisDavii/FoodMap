@@ -20,7 +20,7 @@
         android:theme="@style/Theme.FoodMap">
 
         <activity
-            android:name=".Login"
+            android:name=".TutorialActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,28 +29,28 @@
         </activity>
 
         <activity
+            android:name=".Login"
+            android:exported="false" />
+
+        <activity
             android:name=".WeeklyPlanActivity"
             android:exported="false" />
+
         <activity
             android:name=".AddMealActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EstatisticasActivity"
             android:exported="false" />
 
         <activity
             android:name=".network.FoodScannerActivity"
             android:exported="false" />
 
-<!--        <activity-->
-<!--            android:name=".HistoryActivity"-->
-<!--            android:exported="false" />-->
-
         <activity
             android:name=".Cadastro"
-            android:exported="false" /> <activity
-        android:name=".MainActivity"
-        android:exported="false" />
+            android:exported="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
     </application>
 </manifest>
