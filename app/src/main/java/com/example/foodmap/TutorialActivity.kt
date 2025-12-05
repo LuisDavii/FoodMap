@@ -1,5 +1,6 @@
 package com.example.foodmap
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -139,12 +140,13 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun finishTutorial() {
-        // --- ATENÇÃO: Se não tiver a classe Login, comente a linha abaixo ---
-        // startActivity(Intent(this, Login::class.java))
+        // Criamos a intenção de ir para a tela de Login
+        val intent = Intent(this, Login::class.java)
 
-        // Exemplo alternativo (se ainda não tiver Login):
-        // startActivity(Intent(this, MainActivity::class.java))
+        // Iniciamos a tela
+        startActivity(intent)
 
+        // Fechamos o tutorial para não voltar para ele com o botão 'voltar'
         finish()
     }
 
