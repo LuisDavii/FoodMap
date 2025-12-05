@@ -54,6 +54,26 @@ class TutorialActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val tutorialCompleted = sharedPref.getBoolean("tutorial_completed", false)
+        val isLoggedIn = sharedPref.getBoolean("is_logged_in", false)
+
+        // Se o tutorial JÁ foi visto, não mostramos ele novamente
+        if (tutorialCompleted) {
+            if (isLoggedIn) {
+                // Se está logado, vai direto para o Plano Semanal
+                val intent = Intent(this, WeeklyPlanActivity::class.java)
+                startActivity(intent)
+            } else {
+                // Se não está logado, vai para o Login
+                val intent = Intent(this, Login::class.java)
+                startActivity(intent)
+            }
+            finish() // Fecha a TutorialActivity imediatamente
+            return // Para a execução do código aqui
+        }
+
         setContentView(R.layout.activity_tutorial)
 
         initViews()
@@ -140,13 +160,12 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun finishTutorial() {
-        // Criamos a intenção de ir para a tela de Login
+
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        sharedPref.edit().putBoolean("tutorial_completed", true).apply()
+
         val intent = Intent(this, Login::class.java)
-
-        // Iniciamos a tela
         startActivity(intent)
-
-        // Fechamos o tutorial para não voltar para ele com o botão 'voltar'
         finish()
     }
 

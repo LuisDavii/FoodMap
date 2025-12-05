@@ -29,6 +29,7 @@ class WeeklyPlanActivity : AppCompatActivity() {
 
     // --- Variáveis da UI ---
     private lateinit var recyclerPlan: RecyclerView
+    private lateinit var btnLogout: ImageView
     private lateinit var adapter: WeeklyPlanAdapter
     private lateinit var btnAddMeal: Button
     private lateinit var btnEditMeta: ImageView
@@ -69,6 +70,7 @@ class WeeklyPlanActivity : AppCompatActivity() {
         pbWeekly = findViewById(R.id.progressBarWeekly)
         tvProgressWeekly = findViewById(R.id.tvProgressWeekly)
         tvTotalMeals = findViewById(R.id.tvTotalMeals)
+        btnLogout = findViewById(R.id.btnLogout)
     }
 
     private fun setupRecyclerView() {
@@ -96,6 +98,26 @@ class WeeklyPlanActivity : AppCompatActivity() {
         btnEditMeta.setOnClickListener {
             mostrarDialogEditarMeta()
         }
+
+        btnLogout.setOnClickListener {
+            fazerLogout()
+        }
+    }
+
+    private fun fazerLogout() {
+        // 1. Limpa o SharedPreferences (apaga o "is_logged_in" e dados do usuário)
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.clear() // Apaga tudo
+        editor.apply()
+
+        // 2. Volta para a tela de Login
+        val intent = Intent(this, Login::class.java)
+        // Essas flags limpam a pilha de telas, impedindo que o usuário volte
+        // para o plano semanal apertando o botão "Voltar" do celular.
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     // --- CARREGAMENTO DE DADOS (LISTA + ESTATÍSTICAS) ---

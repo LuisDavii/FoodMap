@@ -25,6 +25,17 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val isLoggedIn = sharedPref.getBoolean("is_logged_in", false)
+
+        if (isLoggedIn) {
+            val intent = Intent(this, WeeklyPlanActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_login)
 
         initComponents()

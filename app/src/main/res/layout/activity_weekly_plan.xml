@@ -54,9 +54,23 @@
             android:layout_marginStart="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvMetaValue"
             app:layout_constraintTop_toTopOf="@+id/tvMetaValue"
             app:layout_constraintBottom_toBottomOf="@+id/tvMetaValue" />
+
+        <ImageView
+            android:id="@+id/btnLogout"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="18dp"
+            android:src="@drawable/logout"
+            app:tint="@color/brand_orange"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Sair"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
