@@ -37,20 +37,10 @@ data class LoginRequest(
     val password: String
 )
 
-
 data class LoginResponse(
     val message: String,
     val usuario: Usuario? = null
 )
-
-
-data class UsuarioResponse(
-    val id: Int,
-    val username: String,
-    val name: String,
-    val email: String
-)
-
 
 data class ApiResponse(
     val message: String,

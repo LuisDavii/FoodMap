@@ -1,78 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".MainActivity">
+    android:background="@color/screen_background"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp">
 
     <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/titulo_login"
-        android:textSize="70sp"
+        android:text="LOGIN"
+        android:textColor="@color/brand_orange"
+        android:textSize="64sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/editTextLogin"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.45"
+        app:layout_constraintBottom_toTopOf="@+id/tvLabelUser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.641" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvLabelUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Usuário:"
+        android:textColor="@color/text_black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextLogin"
+        app:layout_constraintStart_toStartOf="@+id/editTextLogin"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <EditText
         android:id="@+id/editTextLogin"
-        android:layout_width="285dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="32dp"
-        android:hint="@string/titulo_login"
-        android:importantForAutofill="yes"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_input_box"
+        android:hint=""
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:inputType="text"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/tvLabelPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        tools:ignore="LabelFor" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelUser" />
+
+    <TextView
+        android:id="@+id/tvLabelPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Senha:"
+        android:textColor="@color/text_black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextPassword"
+        app:layout_constraintTop_toBottomOf="@+id/editTextLogin" />
 
     <EditText
         android:id="@+id/editTextPassword"
-        android:layout_width="289dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="32dp"
-        android:hint="@string/senha"
-        android:importantForAutofill="yes"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/bg_input_box"
+        android:hint=""
         android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLogin"
-        tools:ignore="LabelFor" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelPass" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonLogin"
-        android:layout_width="140dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="56dp"
-        android:text="@string/entrar"
-        app:backgroundTint="@color/orange"
+        android:layout_width="200dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_botao_laranja"
+        android:text="Próximo"
+        android:textAllCaps="false"
+        android:textColor="@color/text_black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
-    <Button
+    <TextView
         android:id="@+id/button2"
-        android:layout_width="140dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="16dp"
-        android:text="Cadastrar"
-        android:textColor="@color/orange"
-        app:backgroundTint="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8dp"
+        android:text="Cadastrar-se"
+        android:textColor="@color/text_black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonLogin" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

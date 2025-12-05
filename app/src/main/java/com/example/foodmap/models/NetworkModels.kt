@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 // Request de Login
 data class LoginRequest(
-    @SerializedName("userName") // ou "username", conforme sua API
+    @SerializedName("userName")
     val username: String,
 
     @SerializedName("password")
@@ -26,8 +26,8 @@ data class RefeicaoRequest(
     val tipo_refeicao: String,
     val descricao: String,
     val calorias: Int,
-    val usuario_id: Int, // Importante para vincular ao usuário
-    val concluido: Boolean = false // Padrão como não concluído
+    val usuario_id: Int,
+    val concluido: Boolean = false
 )
 
 data class RefeicaoResponse(

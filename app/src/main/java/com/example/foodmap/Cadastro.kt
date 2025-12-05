@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView // Importante: Importar TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -25,7 +26,8 @@ class Cadastro : AppCompatActivity() {
     private lateinit var editConfirmarSenha: EditText
     private lateinit var btnCriarConta: Button
 
-    private lateinit var btnJaPossuiConta: Button
+    // CORREÇÃO: Mudamos de Button para TextView
+    private lateinit var btnJaPossuiConta: TextView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +51,7 @@ class Cadastro : AppCompatActivity() {
         editSenha = findViewById(R.id.editSenha)
         editConfirmarSenha = findViewById(R.id.editConfirmarSenha)
         btnCriarConta = findViewById(R.id.btnCriarConta)
+        // CORREÇÃO: findViewById agora busca o TextView corretamente
         btnJaPossuiConta = findViewById(R.id.btnJaPossuiConta)
     }
 
@@ -58,6 +61,7 @@ class Cadastro : AppCompatActivity() {
                 cadastrarUsuario()
             }
         }
+        // Continua clicável mesmo sendo TextView
         btnJaPossuiConta.setOnClickListener {
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
@@ -103,16 +107,13 @@ class Cadastro : AppCompatActivity() {
     private fun cadastrarUsuario() {
         val usuario = Usuario(
             name = editNome.text.toString().trim(),
-            // AQUI ESTAVA O ERRO: mudamos de userName para username
             username = editUserName.text.toString().trim(),
             email = editEmail.text.toString().trim(),
             password = editSenha.text.toString()
         )
-        // Mostrar loading
+
         btnCriarConta.isEnabled = false
         btnCriarConta.text = "Cadastrando..."
-
-
 
         RetrofitClient.instance.cadastrarUsuario(usuario).enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
@@ -136,8 +137,6 @@ class Cadastro : AppCompatActivity() {
                 }
             }
 
-
-
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 btnCriarConta.isEnabled = true
                 btnCriarConta.text = "Criar Conta"
@@ -149,7 +148,5 @@ class Cadastro : AppCompatActivity() {
                 ).show()
             }
         })
-
-
     }
 }

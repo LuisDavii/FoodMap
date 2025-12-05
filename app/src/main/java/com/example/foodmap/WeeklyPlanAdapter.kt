@@ -7,16 +7,18 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// A classe Meal foi APAGADA daqui porque já existe no arquivo Meal.kt
+
 class WeeklyPlanAdapter(
-    private val meals: List<Meal>,
-    private val onCheckChanged: (Meal, Boolean) -> Unit // Função de callback
+    private val mealList: List<Meal>,
+    private val onCheckChanged: (Meal, Boolean) -> Unit
 ) : RecyclerView.Adapter<WeeklyPlanAdapter.MealViewHolder>() {
 
-    class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtDayAndMeal: TextView = itemView.findViewById(R.id.txtDayAndMeal)
-        val txtDescription: TextView = itemView.findViewById(R.id.txtDescription)
-        val txtCalories: TextView = itemView.findViewById(R.id.txtCalories)
-        val checkboxDone: CheckBox = itemView.findViewById(R.id.checkboxDone)
+    inner class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvTitle: TextView = itemView.findViewById(R.id.tvMealTitle)
+        val tvDesc: TextView = itemView.findViewById(R.id.tvMealDesc)
+        val tvCal: TextView = itemView.findViewById(R.id.tvMealCalories)
+        val cbDone: CheckBox = itemView.findViewById(R.id.cbDone)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
@@ -26,22 +28,20 @@ class WeeklyPlanAdapter(
     }
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
-        val meal = meals[position]
+        val meal = mealList[position]
 
-        // Junta Dia e Tipo (ex: "Segunda - Almoço")
-        holder.txtDayAndMeal.text = "${meal.dayOfWeek} - ${meal.type}"
-        holder.txtDescription.text = meal.description
-        holder.txtCalories.text = "${meal.calories} kcal"
+        holder.tvTitle.text = "${meal.dayOfWeek} - ${meal.type}"
+        holder.tvDesc.text = meal.description
+        holder.tvCal.text = "${meal.calories} kcal"
 
-        // Define o estado do checkbox sem acionar o listener
-        holder.checkboxDone.setOnCheckedChangeListener(null)
-        holder.checkboxDone.isChecked = meal.isDone
+        holder.cbDone.setOnCheckedChangeListener(null)
+        holder.cbDone.isChecked = meal.isDone
 
-        // Ao clicar no checkbox, avisa a Activity para salvar
-        holder.checkboxDone.setOnCheckedChangeListener { _, isChecked ->
+        holder.cbDone.setOnCheckedChangeListener { _, isChecked ->
+            meal.isDone = isChecked
             onCheckChanged(meal, isChecked)
         }
     }
 
-    override fun getItemCount() = meals.size
+    override fun getItemCount(): Int = mealList.size
 }

@@ -2,10 +2,12 @@ package com.example.foodmap.network
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,7 @@ import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -41,20 +44,21 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class FoodScannerActivity : AppCompatActivity() {
-    private val CONFIDENCE_THRESHOLD = 0.70f
-    private lateinit var textViewLoggedInUser: TextView
+    private val CONFIDENCE_THRESHOLD = 0.80f
 
+    // UI Elements
+    private lateinit var btnBack: ImageView // NOVO: Botão Voltar
     private lateinit var buttonScan: Button
+    private lateinit var tvManualEntry: TextView
     private lateinit var cameraPreview: PreviewView
     private lateinit var cardResult: CardView
     private lateinit var textViewFoodName: TextView
     private lateinit var textViewCalories: TextView
     private lateinit var textViewProtein: TextView
-    private lateinit var buttonSaveScan: Button
+    private lateinit var btnSaveIcon: ImageView
 
-    private val loggedInUserName = "Testee"
+    // Data & AI
     private var currentScanResult: ScanResult? = null
-
     private lateinit var interpreter: Interpreter
     private lateinit var labels: List<String>
     private lateinit var cameraExecutor: ExecutorService
@@ -62,18 +66,14 @@ class FoodScannerActivity : AppCompatActivity() {
     private var modelInputHeight: Int = 0
     @Volatile
     private var currentPredictedFood: String? = null
-
     private lateinit var foodDatabase: Map<String, FoodAnalysis>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scanner)
 
         loadFoodDatabase()
-
         initializeViews()
-
         setupClickListeners()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -93,60 +93,64 @@ class FoodScannerActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
+        // Inicializa o botão de voltar
+        btnBack = findViewById(R.id.btnBack)
 
         cameraPreview = findViewById(R.id.cameraPreview)
         buttonScan = findViewById(R.id.buttonScan)
+        tvManualEntry = findViewById(R.id.tvManualEntry)
+
+        tvManualEntry.paintFlags = tvManualEntry.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
         cardResult = findViewById(R.id.cardResult)
         textViewFoodName = findViewById(R.id.textViewFoodName)
         textViewCalories = findViewById(R.id.textViewCalories)
         textViewProtein = findViewById(R.id.textViewProtein)
-        buttonSaveScan = findViewById(R.id.buttonSaveScan)
+        btnSaveIcon = findViewById(R.id.btnSaveIcon)
     }
-
 
     private fun setupClickListeners() {
 
+        // AÇÃO DO BOTÃO VOLTAR
+        btnBack.setOnClickListener {
+            finish() // Fecha o Scanner e volta para o WeeklyPlan
+        }
 
         buttonScan.setOnClickListener {
             val foodName = currentPredictedFood
 
             if (foodName.isNullOrEmpty()) {
-                Toast.makeText(this, "Aponte a câmera para um alimento.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Aponte a câmera para um alimento primeiro.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-
             val analysis = generateFoodAnalysis(foodName)
-
             updateUIWithAnalysis(analysis)
         }
 
+        tvManualEntry.setOnClickListener {
+            val intent = Intent(this, AddMealActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
-        buttonSaveScan.setOnClickListener {
+        btnSaveIcon.setOnClickListener {
             currentScanResult?.let { resultToSave ->
-
                 val intent = Intent(this, AddMealActivity::class.java)
-
                 intent.putExtra("FOOD_NAME", resultToSave.foodName)
                 intent.putExtra("FOOD_CALORIES", resultToSave.calories)
-
                 startActivity(intent)
+                finish()
             } ?: run {
-                Toast.makeText(this, "Nenhum alimento identificado para adicionar.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Faça a análise primeiro.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-
-    /**
-     * Atualiza o CardView com os resultados da análise.
-     */
     private fun updateUIWithAnalysis(analysis: FoodAnalysis) {
-
-        textViewFoodName.text = "Alimento: ${analysis.name}"
+        textViewFoodName.text = analysis.name.replaceFirstChar { it.uppercase() }
         textViewCalories.text = "Calorias (100g): ${analysis.caloriesKcal} kcal"
-        textViewProtein.text = "Proteína: ${analysis.proteinGrams}g | Fibra: ${analysis.fiberGrams}g"
+        textViewProtein.text = "Proteínas: ${analysis.proteinGrams}g"
 
         cardResult.visibility = View.VISIBLE
 
@@ -161,75 +165,32 @@ class FoodScannerActivity : AppCompatActivity() {
         )
     }
 
-    /**
-     * MUDANÇA: Esta função agora lê o nosso 'food_database.json'
-     * e o carrega para um Map em memória para acesso rápido.
-     */
+    // --- MÉTODOS DE CÂMERA E TENSORFLOW (MANTIDOS IGUAIS) ---
     private fun loadFoodDatabase() {
         try {
-            val jsonString = assets.open("food_database.json")
-                .bufferedReader()
-                .use { it.readText() }
-
+            val jsonString = assets.open("food_database.json").bufferedReader().use { it.readText() }
             val listType = object : TypeToken<List<FoodDatabaseEntry>>() {}.type
-
             val entries: List<FoodDatabaseEntry> = Gson().fromJson(jsonString, listType)
-
             foodDatabase = entries.associateBy(
                 { it.key },
-                {
-                    FoodAnalysis(
-                        it.name,
-                        it.caloriesKcal,
-                        it.proteinGrams,
-                        it.fiberGrams
-                    )
-                }
+                { FoodAnalysis(it.name, it.caloriesKcal, it.proteinGrams, it.fiberGrams) }
             )
-
-            Log.d("FoodScannerActivity", "Base de dados JSON carregada com ${foodDatabase.size} itens.")
-
         } catch (e: IOException) {
-            Log.e("FoodScannerActivity", "Erro ao ler food_database.json", e)
-            Toast.makeText(this, "Erro ao carregar base de dados de alimentos.", Toast.LENGTH_LONG).show()
             foodDatabase = emptyMap()
         }
     }
 
-    /**
-     * MUDANÇA: Esta função foi completamente substituída.
-     * Em vez de um 'when' statement, agora ela consulta o nosso Map.
-     */
     private fun generateFoodAnalysis(foodName: String): FoodAnalysis {
-        val data = foodDatabase[foodName.lowercase()]
-
-        if (data != null) {
-            return data
-        } else {
-            Log.w("FoodScannerActivity", "Alimento '$foodName' não encontrado na base de dados JSON.")
-            return FoodAnalysis(foodName, 0, 0.0, 0.0)
-        }
+        return foodDatabase[foodName.lowercase()] ?: FoodAnalysis(foodName, 0, 0.0, 0.0)
     }
 
-    private fun isCameraPermissionGranted() =
-        ContextCompat.checkSelfPermission(
-            this, android.Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun isCameraPermissionGranted() = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setupModelAndLabels()
-                startCamera()
-            } else {
-                Toast.makeText(this, "Permissão da câmera negada.", Toast.LENGTH_SHORT).show()
-                finish()
-            }
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            setupModelAndLabels()
+            startCamera()
         }
     }
 
@@ -239,57 +200,33 @@ class FoodScannerActivity : AppCompatActivity() {
 
     private fun setupModelAndLabels() {
         try {
-
             val modelBuffer = loadModelFile("meu_modelo_comida.tflite")
             interpreter = Interpreter(modelBuffer)
-
-
             labels = FileUtil.loadLabels(this, "labels_comida.txt")
-
-
             val inputTensor = interpreter.getInputTensor(0)
-            val inputShape = inputTensor.shape()
-            modelInputHeight = inputShape[1]
-            modelInputWidth = inputShape[2]
-
-
+            modelInputHeight = inputTensor.shape()[1]
+            modelInputWidth = inputTensor.shape()[2]
             modelInputDataType = inputTensor.dataType()
-
-
             val outputTensor = interpreter.getOutputTensor(0)
-
-
-            outputShape = outputTensor.shape()
-            val outputType = outputTensor.dataType()
-
-            val outputSizeInBytes = outputShape!![1] * outputType.byteSize()
-            outputBuffer = ByteBuffer.allocateDirect(outputSizeInBytes)
+            outputBuffer = ByteBuffer.allocateDirect(outputTensor.shape()[1] * outputTensor.dataType().byteSize())
             outputBuffer!!.order(java.nio.ByteOrder.nativeOrder())
-
         } catch (e: Exception) {
-            Log.e("FoodScannerActivity", "Erro ao carregar modelo ou labels.", e)
-            Toast.makeText(this, "Erro ao carregar modelo: ${e.message}", Toast.LENGTH_LONG).show()
+            Log.e("FoodScanner", "Erro modelo", e)
         }
     }
-
 
     private fun loadModelFile(filename: String): MappedByteBuffer {
         val fileDescriptor = assets.openFd(filename)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
-        val startOffset = fileDescriptor.startOffset
-        val declaredLength = fileDescriptor.declaredLength
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, fileDescriptor.startOffset, fileDescriptor.declaredLength)
     }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(cameraPreview.surfaceProvider)
-            }
+            val preview = Preview.Builder().build().also { it.setSurfaceProvider(cameraPreview.surfaceProvider) }
 
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -297,23 +234,29 @@ class FoodScannerActivity : AppCompatActivity() {
                 .also {
                     it.setAnalyzer(cameraExecutor) { imageProxy ->
                         val bitmap = imageProxy.toBitmap()
-                        if (bitmap != null) {
 
+                        if (bitmap != null) {
                             val tensorImage = TensorImage(modelInputDataType!!)
                             tensorImage.load(bitmap)
+
+
+                            val minSize = Math.min(bitmap.width, bitmap.height)
+
                             val imageProcessor = ImageProcessor.Builder()
+
+                                .add(ResizeWithCropOrPadOp(minSize, minSize))
+
                                 .add(ResizeOp(modelInputHeight, modelInputWidth, ResizeOp.ResizeMethod.BILINEAR))
+
                                 .add(NormalizeOp(0.0f, 255.0f))
                                 .build()
+
                             val processedImage = imageProcessor.process(tensorImage)
 
-
                             outputBuffer!!.rewind()
-
                             interpreter.run(processedImage.buffer, outputBuffer!!)
 
                             outputBuffer!!.rewind()
-
                             val scores = outputBuffer!!.asFloatBuffer()
 
                             var maxScore = -Float.MAX_VALUE
@@ -328,43 +271,25 @@ class FoodScannerActivity : AppCompatActivity() {
                             }
 
                             if (maxScoreIndex != -1) {
-                                if (maxScore >= CONFIDENCE_THRESHOLD) {
-                                    currentPredictedFood = labels[maxScoreIndex]
+                                Log.d("FoodScanner", "Detectado: ${labels[maxScoreIndex]} (${maxScore * 100}%)")
+                            }
 
-                                    Log.d("FoodScanner", "Detectado: ${labels[maxScoreIndex]} com ${(maxScore * 100).toInt()}%")
-                                } else {
-                                    currentPredictedFood = null
-
-                                    Log.d("FoodScanner", "Rejeitado: ${labels[maxScoreIndex]} com apenas ${(maxScore * 100).toInt()}%")
-                                }
+                            if (maxScoreIndex != -1 && maxScore >= CONFIDENCE_THRESHOLD) {
+                                currentPredictedFood = labels[maxScoreIndex]
+                            } else {
+                                currentPredictedFood = null
                             }
                         }
                         imageProxy.close()
                     }
                 }
-
             try {
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalyzer
-                )
-            } catch (exc: Exception) {
-                Log.e("FoodScannerActivity", "Falha ao vincular a câmera", exc)
-            }
+                cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalyzer)
+            } catch (exc: Exception) { Log.e("FoodScanner", "Camera bind failed", exc) }
         }, ContextCompat.getMainExecutor(this))
     }
-    companion object {
-        private const val CAMERA_PERMISSION_REQUEST_CODE = 100
-    }
+    companion object { private const val CAMERA_PERMISSION_REQUEST_CODE = 100 }
 }
 
-/**
- * Data class para representar os dados nutricionais de um alimento.
- * (Esta classe já estava no seu ficheiro, mantida aqui por consistência)
- */
-data class FoodAnalysis(
-    val name: String,
-    val caloriesKcal: Int,
-    val proteinGrams: Double,
-    val fiberGrams: Double
-)
+data class FoodAnalysis(val name: String, val caloriesKcal: Int, val proteinGrams: Double, val fiberGrams: Double)
