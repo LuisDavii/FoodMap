@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <ImageView
         android:id="@+id/imgSlide"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="417dp"
+        android:layout_height="557dp"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_gallery"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_percent="0.80"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
+        app:layout_constraintVertical_bias="0.329"
+        tools:layout_editor_absoluteX="0dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:rotation="180"
+        android:background="@drawable/bg_gradient_shadow"
+        app:layout_constraintTop_toTopOf="@+id/imgSlide" />
     <View
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -39,5 +48,7 @@
         app:layout_constraintTop_toTopOf="@+id/imgSlide"
         app:layout_constraintBottom_toBottomOf="@+id/imgSlide"
         app:layout_constraintVertical_bias="0.5" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

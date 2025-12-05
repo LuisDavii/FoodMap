@@ -31,6 +31,7 @@ import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -43,7 +44,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class FoodScannerActivity : AppCompatActivity() {
-    private val CONFIDENCE_THRESHOLD = 0.70f
+    private val CONFIDENCE_THRESHOLD = 0.80f
 
     // UI Elements
     private lateinit var btnBack: ImageView // NOVO: Botão Voltar
@@ -226,26 +227,41 @@ class FoodScannerActivity : AppCompatActivity() {
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also { it.setSurfaceProvider(cameraPreview.surfaceProvider) }
+
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor) { imageProxy ->
                         val bitmap = imageProxy.toBitmap()
+
                         if (bitmap != null) {
                             val tensorImage = TensorImage(modelInputDataType!!)
                             tensorImage.load(bitmap)
+
+
+                            val minSize = Math.min(bitmap.width, bitmap.height)
+
                             val imageProcessor = ImageProcessor.Builder()
+
+                                .add(ResizeWithCropOrPadOp(minSize, minSize))
+
                                 .add(ResizeOp(modelInputHeight, modelInputWidth, ResizeOp.ResizeMethod.BILINEAR))
+
                                 .add(NormalizeOp(0.0f, 255.0f))
                                 .build()
+
                             val processedImage = imageProcessor.process(tensorImage)
+
                             outputBuffer!!.rewind()
                             interpreter.run(processedImage.buffer, outputBuffer!!)
+
                             outputBuffer!!.rewind()
                             val scores = outputBuffer!!.asFloatBuffer()
+
                             var maxScore = -Float.MAX_VALUE
                             var maxScoreIndex = -1
+
                             for (i in 0 until labels.size) {
                                 val score = scores.get(i)
                                 if (score > maxScore) {
@@ -253,6 +269,11 @@ class FoodScannerActivity : AppCompatActivity() {
                                     maxScoreIndex = i
                                 }
                             }
+
+                            if (maxScoreIndex != -1) {
+                                Log.d("FoodScanner", "Detectado: ${labels[maxScoreIndex]} (${maxScore * 100}%)")
+                            }
+
                             if (maxScoreIndex != -1 && maxScore >= CONFIDENCE_THRESHOLD) {
                                 currentPredictedFood = labels[maxScoreIndex]
                             } else {
@@ -268,7 +289,6 @@ class FoodScannerActivity : AppCompatActivity() {
             } catch (exc: Exception) { Log.e("FoodScanner", "Camera bind failed", exc) }
         }, ContextCompat.getMainExecutor(this))
     }
-
     companion object { private const val CAMERA_PERMISSION_REQUEST_CODE = 100 }
 }
 

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView // Importante: Importar TextView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.foodmap.network.LoginRequest
@@ -101,7 +101,6 @@ class Login : AppCompatActivity() {
                     val usuario = loginResponse?.usuario
 
                     if (usuario != null) {
-                        Toast.makeText(this@Login, "Bem-vindo, ${usuario.name}!", Toast.LENGTH_SHORT).show()
                         salvarDadosUsuario(usuario)
                         irParaTelaPrincipal()
                     } else {
